@@ -22,7 +22,7 @@ public class UserConnectionCrudController {
 	@PostMapping("/add")
 	public ResponseEntity<Response> add(@RequestHeader String rootOrg, @RequestBody ConnectionRequest request)
 			throws IOException {
-		request.setStatus(Constants.Status.PENDING);
+		request.setStatus(Constants.Status.APPROVED);
 		request.setCreatedAt(new Date().toString());
 		Response response = connectionService.upsert(request);
 		return new ResponseEntity<>(response, (HttpStatus) response.get("status"));
