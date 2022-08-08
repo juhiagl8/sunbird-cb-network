@@ -3,6 +3,8 @@ package org.sunbird.cb.hubservices.serviceimpl;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import org.sunbird.cb.hubservices.util.Constants;
 @Service
 public class ConnectionService implements IConnectionService {
 
+	private Logger logger = LoggerFactory.getLogger(ConnectionService.class);
 	@Autowired
 	private NotificationService notificationService;
 
@@ -30,7 +33,7 @@ public class ConnectionService implements IConnectionService {
 	@Autowired
 	INodeService nodeService;
 	@Override
-	public Response upsert(ConnectionRequest request) {
+	public Response upsert(ConnectionRequest request) throws Exception {
 		Response response = null;
 		if(validateRequest(request)) {
 			Node to = new Node(request.getUserIdFrom());
@@ -46,6 +49,8 @@ public class ConnectionService implements IConnectionService {
 			} catch (ValidationException ve) {
 				response.put(Constants.ResponseStatus.STATUS, HttpStatus.BAD_REQUEST);
 			} catch (Exception e) {
+				logger.error(e.getMessage());
+				e.printStackTrace();
 				throw new ApplicationException(Constants.Message.FAILED_CONNECTION + e.getMessage());
 			}
 		}
